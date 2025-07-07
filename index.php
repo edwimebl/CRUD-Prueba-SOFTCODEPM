@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es-MX">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -20,7 +20,6 @@
                 <div id="login-row" class="row justify-content-center align-items-center">
                     <div id="login-column" class="col-md-6">
                         <div id="login-box" class="col-md-12">
-
                             <br>
                             <br>
                             <h3 class="text-center">Registro de nuevo usuario</h3>
@@ -42,7 +41,6 @@
                                 <input type="password" name="password" id="password" class="form-control" required>
                             </div>
 
-
                             <br>
 
                             <div class="mb-3">
@@ -54,6 +52,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
     </form>
     </div>
