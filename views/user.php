@@ -11,6 +11,8 @@
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="../css/fontawesome-all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/es.css">
+
     <title>Lista de Usuarios</title>
   </head>
   <body>
@@ -57,11 +59,10 @@
                     <td><?php echo htmlspecialchars($fila['fecha']); ?></td> 
                     <td>        
                       <a class="btn btn-warning" href="./editar_user.php?id=<?php echo $fila['id'] ?>">
-                        Editar
-                      </a>
-
+                        <i class="fa fa-edit"></i>
+                      </a>                  
                       <a class="btn btn-danger" href="./eliminar_user.php?id=<?php echo $fila['id'] ?>">
-                         Eliminar
+                         <i class="fa fa-trash"></i>
                       </a>
                     </td>           
                   </tr>
@@ -77,13 +78,14 @@
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous">
+    </script>
 
     <script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
     
     <script>
-      //Funcionalidad de la tabla creada con DataTables para mejorar la visualización,requisito utiliar script
-      //https://datatables.net/manual/installation#Include-jQuery
+      //Funcionalidad de la tabla creada con DataTables para mejorar la visualización,requisito utiliar
+      src="https://datatables.net/manual/installation#Include-jQuery"
 
       $(document).ready(function () {
         $('#table_id').DataTable();
