@@ -1,4 +1,17 @@
 <?php
+    session_start();
+    error_reporting(0);
+
+    $validar = $_SESSION['nombre'];
+
+    if( $validar == null || $validar = ''){
+
+        header("Location: ../includes/login.php");
+        die();
+    }
+?>
+
+<?php
 
 $id= $_GET['id'];
 $conexion= mysqli_connect("localhost", "root", "", "crud_prueba");
@@ -46,10 +59,17 @@ $usuario = mysqli_fetch_assoc($resultado);
                                     <input type="password" name="password" id="password" class="form-control" value="<?php echo $usuario['password'];?>" required>
                                     <input type="hidden" name="accion" value="editar_registro">
                                     <input type="hidden" name="id" value="<?php echo $id;?>">
-                                </div>                           
-                                <br>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="rol">Rol:</label>
+                                    <select name="rol" id="rol" class="form-control" required >
+                                        <option value="1" <?php if($usuario['rol'] == 1) echo 'selected'; ?>>Administrador</option>
+                                        <option value="2" <?php if($usuario['rol'] == 2) echo 'selected'; ?>>Usuario</option>
+                                    </select>
+                                </div>
+                                <br><br>
                                 <div class="mb-3">                                    
-                                <button type="submit" class="btn btn-success" >Editar</button>
+                                    <button type="submit" class="btn btn-success" >Editar</button>
                                     <a href="#" class="btn btn-danger">Cancelar</a>                               
                                 </div>
                             </div>

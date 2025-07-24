@@ -10,9 +10,15 @@
       $correo = trim($_POST['correo']);
       $telefono = trim($_POST['telefono']);
       $password = trim($_POST['password']);
+      $rol = trim($_POST['rol']);
 
-      $consulta= "INSERT INTO user (nombre, correo, telefono, password)
-      VALUES ('$nombre', '$correo','$telefono','$password' )";
+      // Validar si el correo ya existe
+      $consulta = "SELECT * FROM user WHERE correo = '$correo'";
+      $resultado = mysqli_query($conexion, $consulta);
+      $filas = mysqli_fetch_assoc($resultado);
+
+      $consulta= "INSERT INTO user (nombre, correo, telefono, password, rol)
+      VALUES ('$nombre', '$correo','$telefono','$password', '$rol')";
 
       mysqli_query($conexion, $consulta);
       mysqli_close($conexion);

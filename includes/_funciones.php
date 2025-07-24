@@ -24,7 +24,7 @@
         $conexion=mysqli_connect("localhost","root","","crud_prueba");
         extract($_POST);
         $consulta="UPDATE user SET nombre = '$nombre', correo = '$correo', telefono = '$telefono',
-        password ='$password' WHERE id = '$id' ";
+        password ='$password', rol = '$rol' WHERE id = '$id' ";
         mysqli_query($conexion, $consulta);
         header('Location: ../views/user.php');
     }
@@ -51,17 +51,19 @@
         $conexion=mysqli_connect("localhost","root","","crud_prueba");
         $consulta= "SELECT * FROM user WHERE nombre='$nombre' AND password='$password'";
         $resultado=mysqli_query($conexion, $consulta);
-        $filas=mysqli_num_rows($resultado);
+        $filas=mysqli_fetch_array($resultado);
 
-        if($filas){
+        if($filas['rol'] == 1){
             header('Location: ../views/user.php');
+        }else if($filas['rol'] == 2){
+            header('Location: ../views/lector.php');
         }else{
-            echo "<script>
-                         alert('Usuario o contraseña incorrectos');
-                         location.href='login.php';
-                  </script>";
-            session_destroy();
+            header("Location: ../includes/login.php");
+            $_SESSION['error'] = "Usuario o contraseña incorrectos";
+            exit();
+            session_destroy();  
         }
+                  
     }
 
 ?>

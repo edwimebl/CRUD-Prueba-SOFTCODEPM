@@ -40,9 +40,6 @@
         <h1>Lista de usuarios</h1>
         <br>
       <div>
-          <a class="btn btn-success" href="../index.php">Nuevo usuario
-            <i class="fas fa-plus"></i>
-          </a>
           <a class="btn btn-warning" href="../includes/sesion/cerrarSesion.php">Log Out
             <i class="fas fa-power-off" aria-hidden="true">              
             </i>
@@ -55,11 +52,9 @@
             <tr>
               <th>Nombre</th>
               <th>Correo</th>
-              <th>Password</th>
               <th>Teléfono</th>
               <th>Fecha Actualización</th>
-              <th>Rol</th>
-              <th>Acciones</th>      
+              <th>Rol</th>      
             </tr>
           </thead>
           <tbody>
@@ -81,22 +76,13 @@
                   <tr>
                     <td><?php echo htmlspecialchars($fila['nombre']); ?></td>
                     <td><?php echo htmlspecialchars($fila['correo']); ?></td>
-                    <td><?php echo htmlspecialchars($fila['password']); ?></td>
                     <td><?php echo htmlspecialchars($fila['telefono']); ?></td>
                     <td><?php echo htmlspecialchars($fila['fecha']); ?></td> 
-                    <td><?php echo htmlspecialchars($fila['rol']); ?></td>
-                    <td>        
-                      <a class="btn btn-warning" href="./editar_user.php?id=<?php echo $fila['id'] ?>">
-                        <i class="fa fa-edit"></i>
-                      </a>                  
-                      <a class="btn btn-danger" href="./eliminar_user.php?id=<?php echo $fila['id'] ?>">
-                         <i class="fa fa-trash"></i>
-                      </a>
-                    </td>           
+                    <td><?php echo htmlspecialchars($fila['rol']); ?></td>                             
                   </tr>
                   <?php
                 }
-              }else {
+                }else {
                 echo "<tr><td colspan='16'> No hay registros disponibles </td></tr>";
               }
             ?>
