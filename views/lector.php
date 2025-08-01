@@ -24,7 +24,7 @@
 
     <!-- Estilos personalizados -->
      <!-- CDN de Font Awesome (gratuito) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../css/fontawesome-all.min.css">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/es.css">
@@ -105,9 +105,7 @@
       //Funcionalidad de la tabla creada con DataTables para mejorar la visualización,requisito utiliar
       src="https://datatables.net/manual/installation#Include-jQuery"
 
-      $(document).ready(function () {
-        $('#table_id').DataTable();
-      });
+      
     </script>
     <script src="../js/user.js"></script>
   </body>
