@@ -31,14 +31,13 @@
 
     function eliminar_registro() {
         $conexion = mysqli_connect("localhost", "root", "", "crud_prueba");
-        if (!$conexion) {
-          die("Connection failed: " . mysqli_connect_error());
-        }
-        $id = isset($_POST['id']) ? intval($_POST['id']) : 0;
-        if ($id > 0) {
-          $consulta = "DELETE FROM user WHERE id = '$id'";
-          mysqli_query($conexion, $consulta);
-        }
+        extract($_POST);
+        $id= $_POST['id'];
+        $consulta= "DELETE FROM user WHERE id= $id";
+
+        mysqli_query($conexion, $consulta);
+
+
         header('Location: ../views/user.php');
     }
 

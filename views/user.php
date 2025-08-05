@@ -121,13 +121,11 @@ if(isset($_GET['enviar'])){
 				<?php
 
 $conexion=mysqli_connect("localhost","root","","crud_prueba");               
-$SQL="SELECT user.id, user.nombre, user.correo, user.password, user.telefono,
+$SQL=mysqli_query($conexion, "SELECT user.id, user.nombre, user.correo, user.password, user.telefono,
 user.fecha, permisos.rol FROM user
-LEFT JOIN permisos ON user.rol = permisos.id $where";
-$dato = mysqli_query($conexion, $SQL);
+LEFT JOIN permisos ON user.rol = permisos.id");
 
-if($dato -> num_rows >0){
-    while($fila=mysqli_fetch_array($dato)){
+    while($fila=mysqli_fetch_assoc($SQL)):
     
 ?>
 <tr>
@@ -144,29 +142,47 @@ if($dato -> num_rows >0){
     <a class="btn btn-warning" href="editar_user.php?id=<?php echo $fila['id']?> ">
     <i class="fa fa-edit"></i> </a>
 
-    <a class="btn btn-danger" href="eliminar_user.php?id=<?php echo $fila['id']?> ">
+    <a class="btn btn-danger btn-del" href="eliminar_user.php?id=<?php echo $fila['id']?> ">
     <i class="fa fa-trash"></i></a>
-
   </td>
 </tr>
 
 <?php
-}
-}else{
-
-    ?>
-    <tr class="text-center">
-    <td colspan="16">No existen registros</td>
-    </tr>
+    endwhile;
     
-    <?php
-    
-}
 
 ?>
 
 	</body>
   </table>
+
+  <script>
+    $('.btn-del').on('click', function(e){
+      e.preventDefault();
+      const href = $(this).attr('href');
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás deshacer esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo!'
+      }).then((result) => {
+        if (result.value) {
+          if (result.isConfirmed) {
+            Swal.fire(
+              'Eliminado!',
+              'El registro ha sido eliminado.',
+              'success'
+            ).then(() => {
+              document.location.href = href;
+            });
+          }
+        }
+      })
+    });
+  </script>
   <!-- <div id="paginador" class=""></div>-->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
           integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
