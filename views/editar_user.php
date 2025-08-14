@@ -9,12 +9,7 @@ if( $validar == null || $validar = ''){
 
     header("Location: ../includes/login.php");
     die();
-    
-
 }
-
-
-
 
 
 $id= $_GET['id'];
@@ -96,5 +91,6 @@ $usuario = mysqli_fetch_assoc($resultado);
         </div>
     </div>
     </form>
+    
 </body>
 </html>

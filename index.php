@@ -14,8 +14,6 @@ if( $validar == null || $validar = ''){
 
 }
 
-
-
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -104,11 +102,9 @@ if( $validar == null || $validar = ''){
 					data: {nombre: nombre,correo: correo, telefono: telefono,password: password, rol: rol},
 					success: function(data){
 					Swal.fire({
-								'title': '¡Mensaje!',
+								'title': 'Usuario creado con éxito!',
 								'text': data,
-                                'icon': 'success',
-                                'showConfirmButton': 'false',
-                                'timer': '1500'
+                                'icon': 'success'                              
 								}).then(function() {
                 window.location = "user.php";
             });
@@ -122,22 +118,12 @@ if( $validar == null || $validar = ''){
 								'icon': 'error'
 								})
 					}
-				});
-
-				
+				});				
 			}else{
 				
 			}
-
-			
-
-
-
 		});		
-
-		
-	});
-    
+	});   
 	
 </script>
 </body>
