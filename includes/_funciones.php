@@ -32,9 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && stripos($_SERVER['CONTENT_TYPE'] ??
 
     if (isset($json['accion'])) {
         switch ($json['accion']) {
+            case 'crear_registro':
+                crear_registro($json); 
+                exit;
             case 'editar_registro':
                 editar_registro($json); 
-                exit; // 🔹 Salimos aquí para no enviar otra respuesta
+                exit;
         }
     }
 
@@ -46,6 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && stripos($_SERVER['CONTENT_TYPE'] ??
 // === Dispatcher clásico para formularios ===
 if (isset($_POST['accion'])) { 
     switch ($_POST['accion']) {
+        case 'crear_registro':
+            crear_registro($_POST);
+            exit;
         case 'editar_registro':
             editar_registro($_POST);
             exit;
@@ -58,8 +64,52 @@ if (isset($_POST['accion'])) {
     }
 }
 
-// === Editar registro (soporta JSON y formulario) ===
+// === Crear registro (soporta JSON y formulario) ===
+function crear_registro($data = null) {
+    $conexion = mysqli_connect("localhost", "root", "", "crud_prueba");
 
+    if (is_array($data)) {
+        header('Content-Type: application/json; charset=utf-8');
+
+        // Validar campos requeridos
+        $nombre   = mysqli_real_escape_string($conexion, trim($data['nombre'] ?? ''));
+        $correo   = mysqli_real_escape_string($conexion, trim($data['correo'] ?? ''));
+        $telefono = mysqli_real_escape_string($conexion, trim($data['telefono'] ?? ''));
+        $password = mysqli_real_escape_string($conexion, trim($data['password'] ?? ''));
+        $rol      = intval($data['rol'] ?? 2); // por defecto 2 (ej: asesor)
+
+        if ($nombre === '' || $correo === '' || $password === '') {
+            echo json_encode(['status'=>'error','message'=>'Faltan campos obligatorios']);
+            exit;
+        }
+
+        // Insertar usuario
+        $sql = "INSERT INTO user (nombre, correo, telefono, password, rol)
+                VALUES ('$nombre', '$correo', '$telefono', '$password', $rol)";
+        $ok = mysqli_query($conexion, $sql);
+
+        if ($ok) {
+            $id = mysqli_insert_id($conexion);
+            $resNuevo = mysqli_query($conexion, "SELECT * FROM user WHERE id = $id");
+            $usuarioNuevo = mysqli_fetch_assoc($resNuevo);
+            $usuarioNuevo['password'] = str_repeat('*', strlen($usuarioNuevo['password']));
+
+            echo json_encode([
+                'status'=>'success',
+                'message'=>'Usuario creado correctamente',
+                'usuario'=>$usuarioNuevo
+            ]);
+        } else {
+            echo json_encode([
+                'status'=>'error',
+                'message'=>'Error al crear: '.mysqli_error($conexion)
+            ]);
+        }
+        exit;
+    }
+}
+
+// === Editar registro (soporta JSON y formulario) ===
 function editar_registro($data = null) {
     $conexion = mysqli_connect("localhost", "root", "", "crud_prueba");
 
@@ -122,7 +172,6 @@ function editar_registro($data = null) {
     }
 }
 
-
 function eliminar_registro() {
     $conexion = mysqli_connect("localhost", "root", "", "crud_prueba");
     extract($_POST);
@@ -133,25 +182,35 @@ function eliminar_registro() {
 }
 
 function acceso_user() {
-    $nombre=$_POST['nombre'];
-    $password=$_POST['password'];
     session_start();
-    $_SESSION['nombre']=$nombre;
+    $nombre = $_POST['nombre'] ?? '';
+    $password = $_POST['password'] ?? '';
 
-    $conexion=mysqli_connect("localhost","root","","crud_prueba");
-    $consulta= "SELECT * FROM user WHERE nombre='$nombre' AND password='$password'";
-    $resultado=mysqli_query($conexion, $consulta);
-    $filas=mysqli_fetch_array($resultado);
+    $conexion = mysqli_connect("localhost","root","","crud_prueba");
 
-    if($filas['rol'] == 1){
-        header('Location: ../views/user.php');
-    } else if($filas['rol'] == 2){
-        header('Location: ../views/lector.php');
-    } else {
-        header("Location: ../includes/login.php");
-        $_SESSION['error'] = "Usuario o contraseña incorrectos";
-        exit();
-        session_destroy();  
+    if (!$conexion) {
+        echo json_encode(['status'=>'error','mensaje'=>'Error de conexión']);
+        exit;
     }
+
+    $consulta = "SELECT * FROM user WHERE nombre='$nombre' AND password='$password'";
+    $resultado = mysqli_query($conexion, $consulta);
+    $filas = mysqli_fetch_assoc($resultado);
+
+    header('Content-Type: application/json; charset=utf-8');
+
+    if ($filas) {
+        $_SESSION['nombre'] = $nombre;
+        // Redirigir según rol
+        if ($filas['rol'] == 1) {
+            echo json_encode(['status'=>'success','mensaje'=>'Login correcto','url'=>'../views/user.php']);
+        } else if ($filas['rol'] == 2) {
+            echo json_encode(['status'=>'success','mensaje'=>'Login correcto','url'=>'../views/lector.php']);
+        }
+    } else {
+        echo json_encode(['status'=>'error','mensaje'=>'Usuario o contraseña incorrectos']);
+    }
+    exit;
 }
+
 ?>

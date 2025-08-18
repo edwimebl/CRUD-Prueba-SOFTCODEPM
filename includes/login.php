@@ -1,47 +1,95 @@
-
 <!DOCTYPE html>
 <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>login</title>
-        <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>        
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
 
-    <body>
-        <form  action="_funciones.php" method="POST">
-            <div id="login" >
-                <div class="container">
-                    <div id="login-row" class="row justify-content-center align-items-center">
-                        <div id="login-column" class="col-md-6">
-                            <div id="login-box" class="col-md-12">
-                                <br>
-                                <br>
-                                    <h3 class="text-center">Iniciar Sesión</h3>
-                                <br>
-                                    <div class="form-group">
-                                        <label for="correo">Usuario:</label><br>
-                                        <input type="text" name="nombre" id="nombre" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Contraseña:</label><br>
-                                        <input type="password" name="password" id="password" class="form-control" required>
-                                        <input type="hidden" name="accion" value="acceso_user">
-                                    </div>
-                                    <div class="form-group">
-                                        <br>
-                                        <center>
-                                            <input type="submit"class="btn btn-success" value="Ingresar">   
-                                        </center>            
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        #login { margin-top: 50px; }
+        #login-box { padding: 20px; border: 1px solid #ccc; background: #f7f7f7; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="login">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div id="login-box">
+                <h3 class="text-center">Iniciar Sesión</h3>
+                <form id="formLogin">
+                    <div class="form-group">
+                        <label for="nombre">Usuario:</label>
+                        <input type="text" name="nombre" id="nombre" class="form-control" required>
                     </div>
-                </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" name="password" id="password" class="form-control" required>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-success">Ingresar</button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </body>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#formLogin").submit(function(e) {
+        e.preventDefault(); // Evitar recarga
+
+        const nombre = $("#nombre").val().trim();
+        const password = $("#password").val().trim();
+
+        $.ajax({
+            url: "_funciones.php",
+            method: "POST",
+            dataType: "json",
+            data: {
+                accion: "acceso_user",
+                nombre: nombre,
+                password: password
+            },
+            success: function(response) {
+                if (response.status === "success") {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Bienvenido',
+                        text: response.mensaje,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Redireccionar según rol
+                        window.location.href = response.url;
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.mensaje
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un problema con el servidor'
+                });
+            }
+        });
+    });
+});
+</script>
+
+</body>
 </html>

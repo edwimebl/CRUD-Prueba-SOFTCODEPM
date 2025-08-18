@@ -74,9 +74,9 @@ function updateimage() {
         }
       })
     });
-
     
-  // === EDITAR USUARIO CON SWEETALERT2 (resalte suave + mensaje por campo) ===
+  //EDITAR USUARIO CON SWEETALERT2 (resalte suave + mensaje por campo)
+
 document.addEventListener('click', async function (e) {
   const btn = e.target.closest('.btn-editar');
   if (!btn) return;
@@ -104,13 +104,13 @@ document.addEventListener('click', async function (e) {
         <input type="hidden" id="id" value="${esc(usuario.id)}">
 
         <input type="text" id="nombre" class="swal2-input" value="${esc(usuario.nombre || '')}" placeholder="Nombre">
-        <span id="error-nombre" class="msg-blue">Este campo es obligatorio</span>
+        <span id="error-nombre" class="msg-blue">⚠️ Este campo es obligatorio</span>
 
         <input type="email" id="correo" class="swal2-input" value="${esc(usuario.correo || '')}" placeholder="Correo">
-        <span id="error-correo" class="msg-blue">Este campo es obligatorio</span>
+        <span id="error-correo" class="msg-blue">⚠️ Este campo es obligatorio</span>
 
         <input type="tel" id="telefono" class="swal2-input" value="${esc(usuario.telefono || '')}" placeholder="Teléfono">
-        <span id="error-telefono" class="msg-blue">Este campo es obligatorio</span>
+        <span id="error-telefono" class="msg-blue">⚠️ Este campo es obligatorio</span>
         <input type="password" id="password" class="swal2-input" value="***" placeholder="Nueva contraseña (opcional)">
 
         <select id="rol" class="swal2-input">
@@ -119,12 +119,12 @@ document.addEventListener('click', async function (e) {
           <option value="2" ${String(usuario.rol) === '2' ? 'selected' : ''}>Usuario</option>
         </select>
 
-        <span id="error-rol" class="msg-blue">Seleccione un rol</span>
-
-        
+        <span id="error-rol" class="msg-blue">⚠️ Seleccione un rol</span>        
       `,
       focusConfirm: false,
       showCancelButton: true,
+      confirmButtonColor: 'rgba(13, 110, 253, 0.25)',
+      cancelButtonColor: '#d33',
       confirmButtonText: 'Guardar cambios',
       cancelButtonText: 'Cancelar',
 
@@ -235,3 +235,106 @@ function esc(str) {
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
+
+// acciones para crear usuario
+// === CREAR USUARIO ===
+
+document.getElementById("btnCrearUsuario").addEventListener("click", function () {
+  Swal.fire({
+    title: "Crear Usuario",
+    html: `
+      <style>
+        .msg-blue { 
+          color: #0d6efd; 
+          font-size: 0.85em; 
+          margin-top: -8px; 
+          margin-bottom: 5px; 
+          display: none; 
+          text-align: center; 
+        }
+      </style>
+
+      <input type="text" id="nombre" class="swal2-input" placeholder="Nombre">
+      <span id="error-nombre" class="msg-blue">⚠️ Este campo es obligatorio</span>
+
+      <input type="email" id="correo" class="swal2-input" placeholder="Correo">
+      <span id="error-correo" class="msg-blue">⚠️ Este campo es obligatorio</span>
+
+      <input type="tel" id="telefono" class="swal2-input" placeholder="Teléfono">
+      <span id="error-telefono" class="msg-blue">⚠️ Este campo es obligatorio</span>
+
+      <input type="password" id="contrasena" class="swal2-input" placeholder="Contraseña">
+      <span id="error-contrasena" class="msg-blue">⚠️ Este campo es obligatorio</span>
+
+      <select id="rol" class="swal2-input">
+        <option value="">Selecciona un rol </option>
+        <option value="1">Administrador</option>
+        <option value="2">Usuario</option>
+      </select>
+      <span id="error-rol" class="msg-blue">⚠️ Seleccione un rol</span>
+    `,
+    focusConfirm: false,
+    showCancelButton: true,
+    confirmButtonColor: 'rgba(13, 110, 253, 0.25)',
+    cancelButtonColor: '#d33',
+    confirmButtonText: "Guardar",
+    cancelButtonText: "Cancelar",
+    preConfirm: () => {
+      const popup = Swal.getPopup();
+
+      // Inputs dentro del popup
+      const nombre = popup.querySelector("#nombre").value.trim();
+      const correo = popup.querySelector("#correo").value.trim();
+      const telefono = popup.querySelector("#telefono").value.trim();
+      const contrasena = popup.querySelector("#contrasena").value.trim();
+      const rol = popup.querySelector("#rol").value;
+
+      // Errores dentro del popup
+      const errorNombre = popup.querySelector("#error-nombre");
+      const errorCorreo = popup.querySelector("#error-correo");
+      const errorTelefono = popup.querySelector("#error-telefono");
+      const errorContrasena = popup.querySelector("#error-contrasena");
+      const errorRol = popup.querySelector("#error-rol");
+
+      // Ocultar todos los errores
+      [errorNombre, errorCorreo, errorTelefono, errorContrasena, errorRol].forEach(e => e.style.display = "none");
+
+      // Validar
+      let valido = true;
+      if (!nombre) { errorNombre.style.display = "block"; valido = false; }
+      if (!correo) { errorCorreo.style.display = "block"; valido = false; }
+      if (!telefono) { errorTelefono.style.display = "block"; valido = false; }
+      if (!contrasena) { errorContrasena.style.display = "block"; valido = false; }
+      if (!rol) { errorRol.style.display = "block"; valido = false; }
+
+      if (!valido) return false;
+
+      return { nombre, correo, telefono, password: contrasena, rol };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      // Enviar al backend
+      fetch("../includes/_funciones.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          accion: "crear_registro",   // 🔹 ahora coincide con _funciones.php
+          ...result.value 
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === "success") {
+          Swal.fire("✅ Éxito", data.message, "success").then(() => {
+            location.reload(); // refresca tabla de usuarios
+          });
+        } else {
+          Swal.fire("❌ Error", data.message, "error");
+        }
+      })
+      .catch(() => {
+        Swal.fire("❌ Error", "No se pudo crear el usuario", "error");
+      });
+    }
+  });
+});
