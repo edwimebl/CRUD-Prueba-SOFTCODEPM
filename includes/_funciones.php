@@ -60,7 +60,6 @@ if (isset($_POST['accion'])) {
 
 // === Editar registro (soporta JSON y formulario) ===
 
-
 function editar_registro($data = null) {
     $conexion = mysqli_connect("localhost", "root", "", "crud_prueba");
 

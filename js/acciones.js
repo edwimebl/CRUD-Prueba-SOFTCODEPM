@@ -56,8 +56,8 @@ function updateimage() {
         title: '¿Estás seguro?',
         text: "¡No podrás deshacer esto!",
         icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
+        showCancelButton: true,         
+        confirmButtonColor: 'rgba(13, 110, 253, 0.25)',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, eliminarlo!'
       }).then((result) => {
@@ -74,6 +74,8 @@ function updateimage() {
         }
       })
     });
+
+    
   // === EDITAR USUARIO CON SWEETALERT2 (resalte suave + mensaje por campo) ===
 document.addEventListener('click', async function (e) {
   const btn = e.target.closest('.btn-editar');
@@ -116,7 +118,7 @@ document.addEventListener('click', async function (e) {
           <option value="1" ${String(usuario.rol) === '1' ? 'selected' : ''}>Administrador</option>
           <option value="2" ${String(usuario.rol) === '2' ? 'selected' : ''}>Usuario</option>
         </select>
-        
+
         <span id="error-rol" class="msg-blue">Seleccione un rol</span>
 
         
