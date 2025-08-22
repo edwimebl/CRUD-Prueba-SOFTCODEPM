@@ -24,9 +24,10 @@
                 <h3 class="text-center">Iniciar Sesión</h3>
                 <form id="formLogin">
                     <div class="form-group">
-                        <label for="nombre">Usuario:</label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" required>
+                        <label for="correo">Correo:</label>
+                        <input type="email" name="correo" id="correo" class="form-control" required>
                     </div>
+
 
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
@@ -34,7 +35,7 @@
                     </div>
 
                     <div class="form-group text-center">
-                        <button type="submit" class="btn btn-success">Ingresar</button>
+                        <button type="submit" class="btn btn-success" id="btnCrearUsuario">Ingresar</button>
                     </div>
                 </form>
             </div>
@@ -45,9 +46,9 @@
 <script>
 $(document).ready(function() {
     $("#formLogin").submit(function(e) {
-        e.preventDefault(); // Evitar recarga
+        e.preventDefault(); // Evitar recarga de la página
 
-        const nombre = $("#nombre").val().trim();
+        const correo = $("#correo").val().trim();
         const password = $("#password").val().trim();
 
         $.ajax({
@@ -56,7 +57,7 @@ $(document).ready(function() {
             dataType: "json",
             data: {
                 accion: "acceso_user",
-                nombre: nombre,
+                correo: correo,
                 password: password
             },
             success: function(response) {
@@ -68,7 +69,7 @@ $(document).ready(function() {
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
-                        // Redireccionar según rol
+                        // Redirigir a la vista correspondiente según el rol
                         window.location.href = response.url;
                     });
                 } else {
@@ -90,6 +91,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
 
 </body>
 </html>

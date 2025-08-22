@@ -4,7 +4,7 @@
 
   $validar = $_SESSION['nombre'];
 
-  if( $validar == null || $validar = ''){
+  if( $validar == null || $validar == ''){
 
     header("Location: ../includes/login.php");
     die();
@@ -35,7 +35,7 @@
     <div class="container is-fluid">
       <br>
       <div class="col-xs-12">
-        <h1>Bienvenido <?php echo $_SESSION['nombre']; ?></h1>
+        <h1>Bienvenido, <?php echo $_SESSION['nombre']; ?></h1>
         <br>
         <h1>Lista de usuarios</h1>
         <br>

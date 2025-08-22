@@ -33,7 +33,7 @@ if ($validar == null || $validar == '') {
 <div class="container is-fluid">
     <br>
     <div class="col-xs-12">
-        <h1>Bienvenido Administrador <?php echo htmlspecialchars($_SESSION['nombre']); ?></h1>
+        <h1>Bienvenido, <?php echo htmlspecialchars($_SESSION['nombre']); ?></h1>
         <br>
         <h1>Lista de usuarios</h1>
         <br>

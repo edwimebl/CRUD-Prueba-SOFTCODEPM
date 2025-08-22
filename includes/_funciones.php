@@ -183,7 +183,7 @@ function eliminar_registro() {
 
 function acceso_user() {
     session_start();
-    $nombre = $_POST['nombre'] ?? '';
+    $correo = $_POST['correo'] ?? '';
     $password = $_POST['password'] ?? '';
 
     $conexion = mysqli_connect("localhost","root","","crud_prueba");
@@ -193,24 +193,26 @@ function acceso_user() {
         exit;
     }
 
-    $consulta = "SELECT * FROM user WHERE nombre='$nombre' AND password='$password'";
+    // Buscar por correo
+    $consulta = "SELECT * FROM user WHERE correo='$correo' AND password='$password'";
     $resultado = mysqli_query($conexion, $consulta);
     $filas = mysqli_fetch_assoc($resultado);
 
     header('Content-Type: application/json; charset=utf-8');
 
     if ($filas) {
-        $_SESSION['nombre'] = $nombre;
-        // Redirigir según rol
+        $_SESSION['nombre'] = $filas['nombre'];
+
         if ($filas['rol'] == 1) {
             echo json_encode(['status'=>'success','mensaje'=>'Login correcto','url'=>'../views/user.php']);
         } else if ($filas['rol'] == 2) {
             echo json_encode(['status'=>'success','mensaje'=>'Login correcto','url'=>'../views/lector.php']);
         }
     } else {
-        echo json_encode(['status'=>'error','mensaje'=>'Usuario o contraseña incorrectos']);
+        echo json_encode(['status'=>'error','mensaje'=>'Correo o contraseña incorrectos']);
     }
     exit;
 }
+
 
 ?>
